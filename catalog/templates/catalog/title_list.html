@@ -1,0 +1,37 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="filters">
+    <form method="get">
+        <input type="text" name="search" placeholder="Search titles, cast, director..." value="{{ search }}">
+        <select name="type">
+            <option value="">All Types</option>
+            <option value="Movie" {% if selected_type == 'Movie' %}selected{% endif %}>Movies</option>
+            <option value="TV Show" {% if selected_type == 'TV Show' %}selected{% endif %}>TV Shows</option>
+        </select>
+        <select name="genre">
+            <option value="">All Genres</option>
+            {% for genre in genres %}
+            <option value="{{ genre }}" {% if selected_genre == genre %}selected{% endif %}>{{ genre }}</option>
+            {% endfor %}
+        </select>
+        <select name="sort">
+            <option value="-release_year">Newest First</option>
+            <option value="release_year">Oldest First</option>
+            <option value="title">Title A-Z</option>
+        </select>
+        <button type="submit">Filter</button>
+    </form>
+    <a href="{% url 'title_create' %}" class="btn">Add New Title</a>
+</div>
+
+<p>Found {{ titles.count }} titles</p>
+
+{% for title in titles %}
+<div class="title-card">
+    <h3><a href="{% url 'title_detail' title.pk %}" style="color: white;">{{ title.title }}</a></h3>
+    <p><strong>{{ title.title_type }}</strong> | {{ title.release_year }} | {{ title.rating }}</p>
+    <p>{{ title.description|truncatewords:30 }}</p>
+</div>
+{% endfor %}
+{% endblock %}
