@@ -8,4 +8,5 @@ class NetflixTitleForm(forms.ModelForm):
         widgets = {
             'description': forms.Textarea(attrs={'rows': 4}),
             'cast': forms.Textarea(attrs={'rows': 3}),
+            'date_added': forms.DateInput(attrs={'type': 'date'}),
         }

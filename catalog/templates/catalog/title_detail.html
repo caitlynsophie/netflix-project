@@ -1,0 +1,21 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="title-card">
+    <h2>{{ title.title }}</h2>
+    <p><strong>Type:</strong> {{ title.title_type }}</p>
+    <p><strong>Release Year:</strong> {{ title.release_year }}</p>
+    <p><strong>Rating:</strong> {{ title.rating }}</p>
+    <p><strong>Duration:</strong> {{ title.duration }}</p>
+    <p><strong>Genres:</strong> {{ title.genres }}</p>
+    <p><strong>Director:</strong> {{ title.director }}</p>
+    <p><strong>Cast:</strong> {{ title.cast }}</p>
+    <p><strong>Country:</strong> {{ title.country }}</p>
+    <p><strong>Date Added:</strong> {{ title.date_added|date:"F d, Y"|default:"N/A" }}</p>
+    <p><strong>Description:</strong> {{ title.description }}</p>
+    
+    <a href="{% url 'title_update' title.pk %}" class="btn">Edit</a>
+    <a href="{% url 'title_delete' title.pk %}" class="btn" style="background: #dc3545;">Delete</a>
+    <a href="{% url 'title_list' %}" class="btn" style="background: #555;">Back to List</a>
+</div>
+{% endblock %}
