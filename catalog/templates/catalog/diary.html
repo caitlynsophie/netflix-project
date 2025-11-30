@@ -1,0 +1,56 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="title-card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>My Diary</h2>
+        <!-- Button that sends you back to the main page to search & pick a show to review -->
+        <a href="{% url 'title_list' %}" class="btn">
+            Add a review
+        </a>
+    </div>
+</div>
+
+<div class="filters">
+    <form method="get">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort">
+            <option value="date" {% if current_sort == 'date' %}selected{% endif %}>
+                Date watched (newest)
+            </option>
+            <option value="name" {% if current_sort == 'name' %}selected{% endif %}>
+                Name (A–Z)
+            </option>
+            <option value="rating" {% if current_sort == 'rating' or current_sort == 'ranking' %}selected{% endif %}>
+                Ranking (highest)
+            </option>
+        </select>
+        <button type="submit" class="btn">Sort</button>
+    </form>
+</div>
+
+{% if reviews %}
+    {% for review in reviews %}
+        <div class="title-card">
+            <h3>
+                <a href="{% url 'title_detail' review.title.pk %}" style="color: white;">
+                    {{ review.title.title }}
+                </a>
+            </h3>
+            <p>
+                <strong>Type:</strong> {{ review.title.title_type }}
+                &nbsp;|&nbsp;
+                <strong>Year:</strong> {{ review.title.release_year }}
+            </p>
+            <p><strong>Rating:</strong> {{ review.rating }} / 5 ⭐</p>
+            <p><strong>Date watched:</strong> {{ review.date_watched }}</p>
+
+            {% if review.review_text %}
+                <p>{{ review.review_text }}</p>
+            {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You haven't logged any watched shows yet. Click "Add a review" above to start!</p>
+{% endif %}
+{% endblock %}

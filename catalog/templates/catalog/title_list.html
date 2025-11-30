@@ -28,10 +28,19 @@
 <p>Found {{ titles.count }} titles</p>
 
 {% for title in titles %}
-<div class="title-card">
-    <h3><a href="{% url 'title_detail' title.pk %}" style="color: white;">{{ title.title }}</a></h3>
-    <p><strong>{{ title.title_type }}</strong> | {{ title.release_year }} | {{ title.rating }}</p>
-    <p>{{ title.description|truncatewords:30 }}</p>
-</div>
+    <div class="title-card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="title-info">
+            <h3>{{ title.title }}</h3>
+            <p>{{ title.title_type }} | {{ title.release_year }}</p>
+        </div>
+
+        <div class="title-actions" style="text-align: right;">
+            <a href="{% url 'title_detail' title.pk %}" class="btn">View Details</a>
+            <a href="{% url 'review_title' title.pk %}" class="btn" style="background: #ffc107; color: black;">
+                Review
+            </a>
+        </div>
+    </div>
 {% endfor %}
+
 {% endblock %}

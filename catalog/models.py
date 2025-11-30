@@ -5,8 +5,7 @@ class NetflixTitle(models.Model):
         ('Movie', 'Movie'),
         ('TV Show', 'TV Show'),
     ]
-    
-    show_id = models.CharField(max_length=10, unique=True)
+
     title_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     title = models.CharField(max_length=200)
     director = models.CharField(max_length=300, blank=True, null=True)
@@ -24,3 +23,16 @@ class NetflixTitle(models.Model):
     
     class Meta:
         ordering = ['-release_year']
+
+class Review(models.Model):
+    title = models.ForeignKey(NetflixTitle, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.IntegerField()          # Should be 1–5
+    review_text = models.TextField(blank=True)
+    date_watched = models.DateField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_watched', '-created_at']
+
+    def __str__(self):
+        return f"{self.title.title} - {self.rating}/5"

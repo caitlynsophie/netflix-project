@@ -1,0 +1,18 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="title-card">
+    <h2>Review: {{ title.title }}</h2>
+    <p><strong>Type:</strong> {{ title.title_type }}</p>
+    <p><strong>Release Year:</strong> {{ title.release_year }}</p>
+</div>
+
+<div class="title-card">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Save Review</button>
+        <a href="{% url 'title_list' %}" class="btn" style="background: #555;">Cancel</a>
+    </form>
+</div>
+{% endblock %}
