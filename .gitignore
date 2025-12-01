@@ -17,9 +17,6 @@ __pycache__/
 *.log
 local_settings.py
 
-# Dataset (optional - see note below)
-# netflix_titles.csv
-
 # IDE
 .vscode/
 .idea/
