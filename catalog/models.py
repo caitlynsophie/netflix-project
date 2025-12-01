@@ -26,7 +26,8 @@ class NetflixTitle(models.Model):
 
 class Review(models.Model):
     title = models.ForeignKey(NetflixTitle, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.IntegerField()          # Should be 1–5
+    # Allow half-star ratings (0.0 - 5.0 in 0.5 increments)
+    rating = models.DecimalField(max_digits=2, decimal_places=1, default=0.0)
     review_text = models.TextField(blank=True)
     date_watched = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)

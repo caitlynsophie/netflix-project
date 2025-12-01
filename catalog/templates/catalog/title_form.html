@@ -1,12 +1,92 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-<h2>{{ action }} Netflix Title</h2>
+<h2 style="margin-top:0;">{{ action }} Netflix Title</h2>
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-    <a href="{% url 'title_list' %}" class="btn" style="background: #555;">Cancel</a>
+
+    {% if form.non_field_errors %}
+        <div style="color:#f88; margin-bottom:8px;">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="title-card">
+        <div class="form-grid" style="display:grid; grid-template-columns:160px 1fr; gap:10px 16px; align-items:center;">
+            
+            <div style="grid-column: span 2; color:#999; font-size:13px; margin-bottom: 6px;">
+                Fill the fields below and click Save.
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.title_type.label_tag }}</label>
+            <div>
+                {{ form.title_type }}
+                {{ form.title_type.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.title.label_tag }}</label>
+            <div>
+                {{ form.title }}
+                {{ form.title.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.director.label_tag }}</label>
+            <div>
+                {{ form.director }}
+                {{ form.director.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.cast.label_tag }}</label>
+            <div>
+                {{ form.cast }}
+                {{ form.cast.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.country.label_tag }}</label>
+            <div>
+                {{ form.country }}
+                {{ form.country.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.date_added.label_tag }}</label>
+            <div>
+                {{ form.date_added }}
+                {{ form.date_added.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.release_year.label_tag }}</label>
+            <div>
+                {{ form.release_year }}
+                {{ form.release_year.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.rating.label_tag }}</label>
+            <div>
+                {{ form.rating }}
+                {{ form.rating.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.duration.label_tag }}</label>
+            <div>
+                {{ form.duration }}
+                {{ form.duration.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.genres.label_tag }}</label>
+            <div>
+                {{ form.genres }}
+                {{ form.genres.errors }}
+            </div>
+
+            <label style="text-align:right; color:#ddd; padding-right:8px;">{{ form.description.label_tag }}</label>
+            <div>
+                {{ form.description }}
+                {{ form.description.errors }}
+            </div>
+            
+        </div> <div style="margin-top:16px; display:flex; gap:8px; justify-content:flex-end;">
+            <button type="submit" class="btn">Save</button>
+            <a href="{% url 'title_list' %}" class="btn" style="background: #555;">Cancel</a>
+        </div>
+    </div>
 </form>
 {% endblock %}

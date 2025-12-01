@@ -1,7 +1,16 @@
 {% extends 'catalog/base.html' %}
 
 {% block content %}
-<div class="filters">
+<div style="display:flex; gap:20px; align-items:flex-start;">
+    <aside id="sidebar" style="width:180px; flex-shrink:0;">
+        <div style="position:sticky; top:20px;">
+            <a href="{% url 'title_create' %}" class="btn" style="display:block; margin-bottom:8px;">Add New Title</a>
+            <a href="{% url 'diary' %}" class="btn" style="display:block;">Diary</a>
+        </div>
+    </aside>
+
+    <main style="flex:1;">
+        <div class="filters">
     <form method="get">
         <input type="text" name="search" placeholder="Search titles, cast, director..." value="{{ search }}">
         <select name="type">
@@ -19,28 +28,56 @@
             <option value="-release_year">Newest First</option>
             <option value="release_year">Oldest First</option>
             <option value="title">Title A-Z</option>
+            <option value="rating_high" {% if current_sort == 'rating_high' %}selected{% endif %}>Rating (highest)</option>
+            <option value="rating_low" {% if current_sort == 'rating_low' %}selected{% endif %}>Rating (lowest)</option>
         </select>
-        <button type="submit">Filter</button>
+        <label style="margin-left:8px;">
+            <input type="checkbox" name="only_rated" value="1" {% if only_rated %}checked{% endif %}>
+            Show rated titles
+        </label>
+        <button type="submit" style="float: right;">Filter</button>
     </form>
-    <a href="{% url 'title_create' %}" class="btn">Add New Title</a>
 </div>
 
-<p>Found {{ titles.count }} titles</p>
+<p>Found {{ titles|length }} titles</p>
 
-{% for title in titles %}
-    <div class="title-card" style="display: flex; justify-content: space-between; align-items: center;">
-        <div class="title-info">
-            <h3>{{ title.title }}</h3>
-            <p>{{ title.title_type }} | {{ title.release_year }}</p>
-        </div>
+{% if titles|length == 0 and only_rated %}
+    <p>You haven't logged any watched shows yet. Click "Diary" to add reviews.</p>
+{% else %}
+    {% for title in titles %}
+        <div class="title-card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="title-info">
+                <h3>{{ title.title }}</h3>
+                <p>{{ title.title_type }} | {{ title.release_year }}</p>
+            </div>
 
-        <div class="title-actions" style="text-align: right;">
-            <a href="{% url 'title_detail' title.pk %}" class="btn">View Details</a>
-            <a href="{% url 'review_title' title.pk %}" class="btn" style="background: #ffc107; color: black;">
-                Review
-            </a>
+            <div class="title-actions" style="text-align: right;">
+                <a href="{% url 'title_detail' title.pk %}" class="btn">View Details</a>
+                <a href="{% url 'review_title' title.pk %}" class="btn" style="background: #ffc107; color: black;">
+                    Review
+                </a>
+                <!-- star display below the review button (lower-right) -->
+                <div style="margin-top:6px; text-align:right;">
+                    {% if title.avg_rating %}
+                        <div class="stars" aria-hidden="true" style="display:inline-block; position:relative;">
+                            <div class="stars-back" style="color:#bbb; font-size:18px;">
+                                <span>★★★★★</span>
+                            </div>
+                            <div class="stars-front" style="color:#c00; font-size:18px; position:absolute; left:0; top:0; overflow:hidden; width:{{ title.avg_rating_pct }}%; white-space:nowrap;">
+                                <span>★★★★★</span>
+                            </div>
+                        </div>
+                        <span style="margin-left:6px; font-size:14px;">{{ title.avg_rating|floatformat:1 }} / 5.0</span>
+                    {% else %}
+                        <span style="color:#888; font-size:14px;">No rating</span>
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+{% endif %}
+
+    </main>
+</div>
 
 {% endblock %}

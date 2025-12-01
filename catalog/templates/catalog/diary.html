@@ -31,7 +31,7 @@
 
 {% if reviews %}
     {% for review in reviews %}
-        <div class="title-card">
+        <div class="title-card" style="overflow: auto;">
             <h3>
                 <a href="{% url 'title_detail' review.title.pk %}" style="color: white;">
                     {{ review.title.title }}
@@ -42,12 +42,37 @@
                 &nbsp;|&nbsp;
                 <strong>Year:</strong> {{ review.title.release_year }}
             </p>
-            <p><strong>Rating:</strong> {{ review.rating }} / 5 ⭐</p>
+            <p> <strong>Rating:</strong>
+                <span style="position: relative; display: inline-block;">
+                    
+                    <span class="stars-back" style="color:#555; font-size:18px;">
+                        ★★★★★
+                    </span>
+                    
+                    <span class="stars-front" style="
+                        color: #c00; 
+                        font-size: 18px; 
+                        position: absolute; 
+                        left: 0; 
+                        top: 0; 
+                        overflow: hidden; 
+                        width: {{ review.title.avg_rating_pct }}%; 
+                        white-space: nowrap;
+                    ">
+                        ★★★★★
+                    </span>
+                </span>
+                
+                <span style="margin-left: 8px;">
+                    ({{ review.rating }} / 5.0)
+                </span>
+            </p>
             <p><strong>Date watched:</strong> {{ review.date_watched }}</p>
-
             {% if review.review_text %}
                 <p>{{ review.review_text }}</p>
             {% endif %}
+
+            <a href="{% url 'review_title' review.title.pk %}" class="btn" style="float: right; background: #ffc107; color: black;">Edit review</a>
         </div>
     {% endfor %}
 {% else %}

@@ -14,7 +14,7 @@ class Command(BaseCommand):
                 date_added = pd.to_datetime(row['date_added']).date() if pd.notna(row['date_added']) else None
                 
                 NetflixTitle.objects.create(
-                    show_id=row['show_id'],
+                    # show_id=row['show_id'],
                     title_type=row['type'],
                     title=row['title'],
                     director=row['director'] if pd.notna(row['director']) else '',

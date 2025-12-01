@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Avg
 from .models import NetflixTitle, Review
 from .forms import NetflixTitleForm, ReviewForm
 
 def title_list(request):
-    titles = NetflixTitle.objects.all()
+    # annotate titles with average rating (from related Review.rating)
+    titles = NetflixTitle.objects.all().annotate(avg_rating=Avg('reviews__rating'))
     
     # Search
     search = request.GET.get('search', '')
@@ -27,7 +28,27 @@ def title_list(request):
     
     # Sort
     sort = request.GET.get('sort', '-release_year')
-    titles = titles.order_by(sort)
+    # support rating-based sorting via annotated avg_rating
+    if sort == 'rating_high':
+        titles = titles.order_by('-avg_rating', '-release_year')
+    elif sort == 'rating_low':
+        titles = titles.order_by('avg_rating', '-release_year')
+    else:
+        titles = titles.order_by(sort)
+
+    # Optionally filter to only titles that have at least one rating
+    only_rated = request.GET.get('only_rated')
+    if only_rated:
+        titles = titles.filter(avg_rating__isnull=False)
+
+    # evaluate queryset and attach percentage fill for stars to each title
+    titles = list(titles)
+    for t in titles:
+        try:
+            avg = float(t.avg_rating) if t.avg_rating is not None else None
+        except Exception:
+            avg = None
+        t.avg_rating_pct = (avg / 5.0) * 100 if avg is not None else 0
     
     # Get unique genres for filter dropdown
     all_genres = set()
@@ -40,6 +61,8 @@ def title_list(request):
         'search': search,
         'selected_type': title_type,
         'selected_genre': genre,
+        'current_sort': sort,
+        'only_rated': bool(only_rated),
     }
     return render(request, 'catalog/title_list.html', context)
 
